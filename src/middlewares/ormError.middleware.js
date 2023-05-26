@@ -35,6 +35,6 @@ const ormError = (err, req, res, next)=>{
             errors: err.errors
         })
     }
-    next()
+    next(err)
 }
 module.exports= ormError
