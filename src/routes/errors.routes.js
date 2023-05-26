@@ -1,6 +1,6 @@
-const errorHandler = require("./middlewares/errorHandler.middleware");
-const logError = require("./middlewares/logError.middleware");
-const ormError = require("./middlewares/ormError.middleware")
+const errorHandler = require("../middlewares/errorHandler.middleware");
+const logError = require("../middlewares/logError.middleware");
+const ormError = require("../middlewares/ormError.middleware")
 
 const errorsRoute=(app)=>{
     app.use(logError)
