@@ -1,22 +1,15 @@
 const Answers = require("../models/answers.model");
 
-const createAnswer = async (req, res) => {
+const createAnswer = async (req, res, next) => {
   try {
+    const {content, userId, postId} = req.body
+    await Answers.create({content, userId, postId})
     res.json({});
   } catch (error) {
-    res.status(400).json(error);
-  }
-};
-
-const updateAnswer = async (req, res) => {
-  try {
-    res.json({});
-  } catch (error) {
-    res.status(400).json(error);
+    next(error);
   }
 };
 
 module.exports = {
-  createAnswer,
-  updateAnswer,
+  createAnswer
 };

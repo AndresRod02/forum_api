@@ -4,6 +4,7 @@ const db = require("./utils/database");
 const apiRoutes = require("./routes/index");
 const errorsRoute = require('./routes/errors.routes');
 const initModels = require('./models/initModels')
+const transporter = require('./utils/mailer')
 
 initModels()
 const app = express();

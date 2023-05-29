@@ -1,6 +1,8 @@
 const Users = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendWelcomeMail = require('../utils/sendMails')
+require('dotenv').config()
 
 const createUser = async (req, res, next) => {
   try {
@@ -9,6 +11,15 @@ const createUser = async (req, res, next) => {
 
     await Users.create({ username, email, password: hashed });
     res.status(201).send();
+    const verifyToken = jwt.sign(
+      { username, email },
+      process.env.JWT_SECRET_EMAIL_VALIDATION,
+      {
+        algorithm: "HS512",
+        expiresIn: "48h",
+      }
+    );
+    sendWelcomeMail(email, {username, verifyToken})
   } catch (error) {
     next(error);
   }
@@ -29,7 +40,13 @@ const login = async (req, res, next) => {
         message: "user not exist",
       });
     }
-
+    if(!user.validUser){
+      return next({
+        status: 400,
+        name: 'email is not verified',
+        message: 'User needs verified his/her email'
+      })
+    }
     // comparar las contraseñas
     const validPassword = await bcrypt.compare(password, user.password);
 
@@ -50,7 +67,7 @@ const login = async (req, res, next) => {
     // Genear token
     const userData = { firstname, lastname, id, username, email, rolId };
 
-    const token = jwt.sign(userData, "parangaricutirimucuaro", {
+    const token = jwt.sign(userData, process.env.JWT_SECRET_LOGIN, {
       algorithm: "HS512",
       expiresIn: "5m",
     });

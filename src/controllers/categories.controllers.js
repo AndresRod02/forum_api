@@ -8,7 +8,16 @@ const findAllCategories = async (req, res, next) =>{
     next(error)
  }
 };
-
+const createCategories = async (req, res, next) =>{
+  try {
+    const {category, description} = req.body
+    await Categories.create({category, description})
+    res.status(201).send()
+  } catch(error){
+    next(error);
+ }
+};
 module.exports = {
-  findAllCategories
+  findAllCategories,
+  createCategories
 }
